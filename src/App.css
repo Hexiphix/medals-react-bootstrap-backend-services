@@ -1,60 +1,24 @@
-.appHeading {
-  font-size: 1.4em;
-  width: 100%;
-  min-height: 40px;
-  position: fixed;
-  z-Index: 1000;
-  background-color: black;
-  color: white;
-  padding: 6px;
-  opacity: .85;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.medal-count {
+  user-select:none;
 }
-
-.countries {
-  padding-top: 60px;
+.btn:focus {
+  outline: none;
+  box-shadow: none;
 }
-
-.country {
-  text-align: center;
-  padding-top: 0px;
+.icon-btn {
+  cursor: pointer;
 }
-
-.name {
-  font-size: 1.2em;
-  font-weight: bold;
-  margin-bottom: 6px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.icon-btn:hover {
+  opacity: .5;
 }
-
-.badge {
-  margin-left: 10px;
-  display: inline-block;
-  min-width: 16px;
-  height: 16px;
-  padding: 3px;
-  border-radius: 4px;
-  font-size: 12px;
-  text-align: center;
-  background: #1779ba;
-  color: #fff;
-}
-
-.medals {
-  text-transform: capitalize;
-}
-
-.medals button {
-  margin-left: 10px;
-  width: 25px;
-}
-
-.newCountryButton {
-  text-align: center;
-  margin-bottom: 20px; 
+.btn-close {
+  box-sizing: content-box;
+  width: 1em;
+  height: 1em;
+  padding: .25em .25em;
+  color: #000;
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+  border: 0;
+  border-radius: .25rem;
+  opacity: .5;
 }

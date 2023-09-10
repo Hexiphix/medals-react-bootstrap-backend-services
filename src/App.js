@@ -2,8 +2,16 @@
 // Author:      Jeff Grissom
 // Version:     4.xx
 import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
+import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import { PlusCircleFill } from 'react-bootstrap-icons';
 import Country from './components/Country';
-import NewCountry from './components/NewCountry';
 import './App.css';
 
 class App extends Component {
@@ -17,13 +25,19 @@ class App extends Component {
       { id: 1, name: 'gold' },
       { id: 2, name: 'silver' },
       { id: 3, name: 'bronze' },
-    ]
+    ],
+    show: false,
+    newCountryName: ""
   }
-  handleAdd = (name) => {
-    const { countries } = this.state;
-    const id = countries.length === 0 ? 1 : Math.max(...countries.map(country => country.id)) + 1;
-    const mutableCountries = [...countries].concat({ id: id, name: name, gold: 0, silver: 0, bronze: 0 });
-    this.setState({ countries: mutableCountries });
+  handleChange = (e) => this.setState({ [e.target.name]: e.target.value});
+  handleAdd = () => {
+    if (this.state.newCountryName.length > 0) {
+      const { countries } = this.state;
+      const id = countries.length === 0 ? 1 : Math.max(...countries.map(country => country.id)) + 1;
+      const mutableCountries = [...countries].concat({ id: id, name: this.state.newCountryName, gold: 0, silver: 0, bronze: 0 });
+      this.setState({ countries: mutableCountries });
+    }
+    this.handleClose();
   }
   handleDelete = (countryId) => {
     const { countries } = this.state;
@@ -47,27 +61,69 @@ class App extends Component {
     this.state.medals.forEach(medal => { sum += this.state.countries.reduce((a, b) => a + b[medal.name], 0); });
     return sum;
   }
+  
+  handleClose = () => {
+    this.setState({ show:false });
+  }
+  handleShow = () => {
+    this.setState({ newCountryName: "", show:true });
+  }
+  keyPress = (e) => {
+    (e.keyCode ? e.keyCode : e.which) == '13' && this.handleAdd();
+  }
   render() { 
     return (
       <React.Fragment>
-        <div className='appHeading'>
-          Olympic Medals
-          <span className='badge'>
-            { this.getAllMedalsTotal() }
-          </span>
-        </div>
-        <div className='countries'>
-            { this.state.countries.map(country => 
-              <Country 
-                key={ country.id } 
+        <Modal onKeyPress={ this.keyPress } show={this.state.show} onHide={ this.handleClose }>
+          <Modal.Header closeButton>
+            <Modal.Title>New Country</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Country Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="newCountryName"
+                onChange={ this.handleChange }
+                value={ this.state.newCountryName }
+                placeholder="enter name"
+                autoFocus
+                autoComplete='off'
+              />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={ this.handleClose }>
+              Close
+            </Button>
+            <Button variant="primary" onClick={ this.handleAdd }>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Navbar className="navbar-dark bg-dark">
+          <Container fluid>
+            <Navbar.Brand>
+              Olympic Medals
+              <Badge className="ml-2" bg="light" text="dark" pill>{ this.getAllMedalsTotal() }</Badge>
+            </Navbar.Brand>
+            <Button variant="outline-success" onClick={ this.handleShow }><PlusCircleFill /></Button>{' '}
+          </Container>
+        </Navbar>
+        <Container fluid>
+          <Row>
+          { this.state.countries.map(country => 
+            <Col className="mt-3" key={ country.id }>
+              <Country  
                 country={ country } 
                 medals={ this.state.medals }
                 onDelete={ this.handleDelete }
                 onIncrement={ this.handleIncrement } 
                 onDecrement={ this.handleDecrement } />
-            )}
-        </div>
-        <NewCountry onAdd={ this.handleAdd } />
+            </Col>
+          )}
+          </Row>
+        </Container>
       </React.Fragment>
     );
   }
