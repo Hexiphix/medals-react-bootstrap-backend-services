@@ -5,29 +5,20 @@ import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Badge from 'react-bootstrap/Badge';
-import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
-import { PlusCircleFill } from 'react-bootstrap-icons';
 import Country from './components/Country';
 import './App.css';
+import NewCountry from './components/NewCountry';
 
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [medals, setMedals] = useState([]);
 
-  const [show, setShow] = useState(false);
-  const [newCountryName, setNewCountryName] = useState("");
-
-  const handleAdd = () => {
-    if (newCountryName.length > 0) {
-      const id = countries.length === 0 ? 1 : Math.max(...countries.map(country => country.id)) + 1;
-      const mutableCountries = [...countries].concat({ id: id, name: newCountryName, gold: 0, silver: 0, bronze: 0 });
-      setCountries( mutableCountries );
-    }
-    handleClose();
+  const handleAdd = (name) => {
+    const id = countries.length === 0 ? 1 : Math.max(...countries.map(country => country.id)) + 1;
+    const mutableCountries = [...countries].concat({ id: id, name: name, gold: 0, silver: 0, bronze: 0 });
+    setCountries( mutableCountries );
   }
 
   const handleDelete = (countryId) => {
@@ -54,18 +45,6 @@ const App = () => {
     medals.forEach(medal => { sum += countries.reduce((a, b) => a + b[medal.name], 0); });
     return sum;
   }
-  
-  const handleClose = () => {
-    setShow(false);
-  }
-  const handleShow = () => {
-    setShow(true);
-    setNewCountryName("");
-  }
-
-  const keyPress = (e) => {
-    (e.keyCode ? e.keyCode : e.which) == '13' && handleAdd();
-  }
 
   useEffect(() => {
     // Initial state data stored here
@@ -85,40 +64,14 @@ const App = () => {
 
   return (
     <React.Fragment>
-      <Modal onKeyPress={ keyPress } show={show} onHide={ handleClose }>
-        <Modal.Header closeButton>
-          <Modal.Title>New Country</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-            <Form.Label>Country Name</Form.Label>
-            <Form.Control
-              type="text"
-              name="newCountryName"
-              onChange={ (e) => setNewCountryName(e.target.value) }
-              value={ newCountryName }
-              placeholder="enter name"
-              autoFocus
-              autoComplete='off'
-            />
-          </Form.Group>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={ handleClose }>
-            Close
-          </Button>
-          <Button variant="primary" onClick={ handleAdd }>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
       <Navbar className="navbar-dark bg-dark">
         <Container fluid>
           <Navbar.Brand>
             Olympic Medals
             <Badge className="ml-2" bg="light" text="dark" pill>{ getAllMedalsTotal() }</Badge>
           </Navbar.Brand>
-          <Button variant="outline-success" onClick={ handleShow }><PlusCircleFill /></Button>{' '}
+          <NewCountry onAdd={ handleAdd }></NewCountry>
+          {/* <Button variant="outline-success" onClick={ handleShow }><PlusCircleFill /></Button>{' '} */}
         </Container>
       </Navbar>
       <Container fluid>
