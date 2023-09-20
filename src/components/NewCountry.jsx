@@ -16,6 +16,10 @@ const NewCountry = (props) => {
   const handleModalClose = () => {
     setShowModal(false);
   }
+  const handleModalShow = () => {
+    setShowModal(true);
+    setNewCountryName("");
+  }
 
   const handleModalkeyPress = (e) => {
     (e.keyCode ? e.keyCode : e.which) == '13' && handleAdd();
@@ -27,8 +31,8 @@ const NewCountry = (props) => {
   }
   
   return (
-    <React.Fragment className='newCountryButton'>
-      <Button onClick={ () => {setShowModal(true); setNewCountryName("");} }>
+    <React.Fragment>
+      <Button variant="outline-success" onClick={ handleModalShow }>
         <PlusCircleFill />
       </Button>
       <Modal onKeyPress={ handleModalkeyPress } show={showModal} onHide={ handleModalClose }>
