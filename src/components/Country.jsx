@@ -3,17 +3,25 @@ import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Medal from './Medal';
-import { TrashFill } from 'react-bootstrap-icons';
+import { TrashFill, Save, ArrowCounterclockwise } from 'react-bootstrap-icons';
 
 const Country = (props) => {
-  const { country, medals, onIncrement, onDecrement, onDelete } = props;
-
+  const { country, medals, onIncrement, onDecrement, onDelete, onSave, onReset } = props;
   const getMedalsTotal = () => {
     let sum = 0;
-    medals.forEach(medal => { sum += country[medal.name]; });
+    // use medal count displayed in the web page for medal count totals
+    medals.forEach(medal => { sum += country[medal.name].page_value; });
     return sum;
   }
-
+  const renderSaveButton = () => {
+    let unsaved = false;
+    medals.forEach(medal => {
+      if (country[medal.name].page_value !== country[medal.name].saved_value) {
+        unsaved = true;
+      }
+    });
+    return unsaved;
+  }
   return (
     <Card style={{width:"22rem"}} className='mx-auto'>
       <Card.Body>
@@ -24,7 +32,21 @@ const Country = (props) => {
             { getMedalsTotal() }
           </Badge>
           </span>
-          <TrashFill onClick={() => onDelete(country.id)} className='icon-btn' style={{ color:'red' }} />
+          {/* this will render save/reset buttons if the page/saved medal counts are not equal
+          otherewise, the delete country button will be rendered */}
+          { renderSaveButton() ?
+            <React.Fragment>
+              {/* TODO: use Bootstrap stying / icons */}
+              <Save 
+                onClick={ () => onSave(country.id) }
+                className="icon-btn" />
+              <ArrowCounterclockwise 
+                onClick={ () => onReset(country.id) }
+                className="icon-btn" />
+            </React.Fragment>
+            :
+            <TrashFill onClick={() => onDelete(country.id)} className='icon-btn' style={{ color:'red' }} />
+          }
         </Card.Title>
         <ListGroup variant="flush">
         { medals.map(medal =>
